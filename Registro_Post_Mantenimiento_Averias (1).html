@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>FR-COO-ST-001 · Registro Post-Mantenimiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EEF3F4;
+    --card: #FFFFFF;
+    --ink: #142229;
+    --ink-soft: #4B6068;
+    --line: #D7E2E5;
+    --steel: #1B4965;
+    --steel-dark: #10334A;
+    --steel-soft: #E4EDF1;
+    --safety: #E1591E;
+    --safety-soft: #FCE6DB;
+    --ok: #2F8F5B;
+    --ok-soft: #E1F3E9;
+    --bad: #C6493B;
+    --bad-soft: #FBE6E3;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background:var(--bg);
+    display:flex;
+    flex-direction:column;
+    padding-bottom:76px;
+  }
+  header.top{
+    background:var(--steel);
+    color:#fff;
+    padding:16px 18px 14px;
+    position:sticky;
+    top:0;
+    z-index:20;
+    box-shadow:0 2px 10px rgba(16,51,74,.25);
+  }
+  header.top .code{
+    font-family:"Oswald","Segoe UI",sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#B9D3E0;
+    font-weight:600;
+  }
+  header.top h1{
+    font-family:"Oswald","Segoe UI",sans-serif;
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:.01em;
+    margin:2px 0 0;
+    text-transform:uppercase;
+  }
+  .steps-bar{
+    display:flex;
+    gap:6px;
+    padding:10px 18px 0;
+    background:var(--steel);
+  }
+  .steps-bar .dot{
+    flex:1;
+    height:4px;
+    border-radius:2px;
+    background:rgba(255,255,255,.25);
+    transition:background .2s;
+  }
+  .steps-bar .dot.active{background:var(--safety);}
+  .steps-bar .dot.done{background:#9FD9B8;}
+
+  main{flex:1;padding:16px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+    margin-bottom:14px;
+  }
+  .step-eyebrow{
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:2px;
+  }
+  .step-num{
+    width:24px;height:24px;border-radius:50%;
+    background:var(--steel);color:#fff;
+    font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Oswald",sans-serif;
+  }
+  .step-title{
+    font-family:"Oswald","Segoe UI",sans-serif;
+    font-size:17px;font-weight:600;color:var(--steel-dark);
+    letter-spacing:.01em;
+  }
+  .step-sub{
+    font-size:12.5px;color:var(--ink-soft);
+    margin:2px 0 16px 32px;
+  }
+
+  label.field{display:block;margin-bottom:14px;}
+  label.field .lbl{
+    display:block;font-size:12.5px;font-weight:600;
+    color:var(--ink-soft);margin-bottom:5px;
+    text-transform:uppercase;letter-spacing:.03em;
+  }
+  input[type=text], input[type=date], input[type=time], textarea, select{
+    width:100%;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:11px 12px;
+    font-size:15px;
+    font-family:inherit;
+    color:var(--ink);
+    background:#fff;
+  }
+  textarea{resize:vertical;min-height:78px;}
+  input:focus, textarea:focus, select:focus{
+    outline:none;border-color:var(--steel);box-shadow:0 0 0 3px rgba(27,73,101,.12);
+  }
+  .row2{display:flex;gap:10px;}
+  .row2 > label{flex:1;}
+
+  .choice-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .choice{
+    flex:1;min-width:70px;
+    text-align:center;
+    padding:10px 8px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    font-size:13.5px;font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    user-select:none;
+    background:#fff;
+  }
+  .choice.sel-yes{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);}
+  .choice.sel-no{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);}
+  .choice.sel-na{background:var(--steel-soft);border-color:var(--steel);color:var(--steel);}
+
+  .cond-item, .check-item{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;padding:11px 0;border-bottom:1px solid var(--line);
+  }
+  .cond-item:last-child, .check-item:last-child{border-bottom:none;}
+  .cond-item .txt, .check-item .txt{font-size:13.5px;color:var(--ink);flex:1;}
+  .mini-choice{display:flex;gap:6px;}
+  .mini-choice .choice{flex:0 0 46px;min-width:0;padding:8px 4px;font-size:12.5px;}
+
+  .banner{
+    background:var(--steel-soft);
+    border:1px solid #BFDCE8;
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:12.5px;
+    color:var(--steel-dark);
+    margin-bottom:14px;
+    line-height:1.45;
+  }
+  .banner.warn{background:var(--safety-soft);border-color:#F3C6A9;color:#8C3A15;}
+
+  .sig-wrap{
+    border:1.5px dashed var(--line);
+    border-radius:12px;
+    background:#FAFCFD;
+    padding:10px;
+    margin-top:6px;
+  }
+  canvas.sig-pad{
+    width:100%;
+    height:150px;
+    background:#fff;
+    border-radius:8px;
+    border:1px solid var(--line);
+    touch-action:none;
+    display:block;
+  }
+  .sig-actions{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .sig-hint{font-size:11.5px;color:var(--ink-soft);}
+  .btn-text{
+    background:none;border:none;color:var(--steel);font-weight:600;font-size:13px;
+    cursor:pointer;padding:4px 6px;
+  }
+  .sig-status{
+    font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:20px;
+  }
+  .sig-status.empty{background:var(--bad-soft);color:var(--bad);}
+  .sig-status.done{background:var(--ok-soft);color:var(--ok);}
+
+  .optional-toggle{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 0;
+  }
+  .optional-toggle input{width:18px;height:18px;}
+  .optional-toggle .txt{font-size:13.5px;font-weight:600;color:var(--ink-soft);}
+
+  footer.nav{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:480px;
+    background:#fff;border-top:1px solid var(--line);
+    display:flex;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    z-index:20;
+  }
+  .btn{
+    flex:1;padding:13px;border-radius:10px;font-size:14.5px;font-weight:700;
+    border:none;cursor:pointer;font-family:inherit;letter-spacing:.01em;
+  }
+  .btn-primary{background:var(--steel);color:#fff;}
+  .btn-primary:active{background:var(--steel-dark);}
+  .btn-ghost{background:var(--steel-soft);color:var(--steel-dark);}
+  .btn-submit{background:var(--safety);color:#fff;}
+  .btn:disabled{opacity:.45;}
+
+  .tabbar{
+    position:sticky;top:0;z-index:20;
+    display:flex;background:var(--steel-dark);
+  }
+  .tabbar button{
+    flex:1;background:none;border:none;color:#B9D3E0;
+    font-family:"Oswald",sans-serif;font-size:12.5px;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;
+    padding:12px 4px;cursor:pointer;border-bottom:3px solid transparent;
+  }
+  .tabbar button.active{color:#fff;border-bottom-color:var(--safety);}
+
+  .stat-row{display:flex;gap:10px;margin-bottom:14px;}
+  .stat{
+    flex:1;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:12px;text-align:center;
+  }
+  .stat .num{font-family:"Oswald",sans-serif;font-size:22px;font-weight:700;color:var(--steel-dark);}
+  .stat .lbl{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
+
+  .record-card{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px;margin-bottom:10px;cursor:pointer;
+  }
+  .record-card .top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .record-card .eq{font-weight:700;font-size:14.5px;color:var(--steel-dark);}
+  .record-card .meta{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .badge{
+    font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;
+  }
+  .badge.ok{background:var(--ok-soft);color:var(--ok);}
+  .badge.pend{background:var(--bad-soft);color:var(--bad);}
+  .record-card .prob{font-size:13px;color:var(--ink);margin-top:8px;line-height:1.4;}
+
+  .search-bar{
+    display:flex;gap:8px;margin-bottom:14px;
+  }
+  .search-bar input{flex:1;}
+  .export-btn{
+    display:block;width:100%;background:var(--steel-soft);color:var(--steel-dark);
+    border:1px solid #BFDCE8;border-radius:10px;padding:12px;font-weight:700;
+    font-size:13.5px;text-align:center;cursor:pointer;margin-bottom:14px;font-family:inherit;
+  }
+
+  .empty-state{
+    text-align:center;padding:50px 20px;color:var(--ink-soft);
+  }
+  .empty-state .icon{font-size:36px;margin-bottom:10px;}
+
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(16,34,41,.55);
+    z-index:50;display:flex;align-items:flex-end;justify-content:center;
+  }
+  .modal{
+    background:#fff;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;
+    border-radius:18px 18px 0 0;padding:20px;
+  }
+  .modal h2{font-family:"Oswald",sans-serif;font-size:18px;color:var(--steel-dark);margin:0 0 12px;}
+  .modal .kv{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px;}
+  .modal .kv .k{color:var(--ink-soft);}
+  .modal .kv .v{font-weight:600;text-align:right;}
+  .modal .sig-img{border:1px solid var(--line);border-radius:8px;width:100%;background:#fff;margin-top:6px;}
+  .modal .section-title{font-family:"Oswald",sans-serif;font-size:13px;color:var(--steel);margin:16px 0 4px;text-transform:uppercase;letter-spacing:.05em;}
+  .modal .close-x{
+    position:sticky;top:0;float:right;background:var(--steel-soft);border:none;
+    width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;color:var(--steel-dark);
+  }
+
+  .toast{
+    position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+    background:var(--steel-dark);color:#fff;padding:12px 20px;border-radius:30px;
+    font-size:13.5px;font-weight:600;z-index:60;box-shadow:0 4px 14px rgba(0,0,0,.25);
+  }
+  .gear-btn{
+    position:absolute;top:16px;right:14px;background:rgba(255,255,255,.15);
+    border:none;color:#fff;width:34px;height:34px;border-radius:50%;
+    font-size:16px;cursor:pointer;
+  }
+  .conn-pill{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;
+    margin-top:2px;
+  }
+  .conn-pill.ok{background:rgba(47,143,91,.2);color:#9FE3BC;}
+  .conn-pill.off{background:rgba(198,73,59,.25);color:#F4B3AA;}
+  .badge.pending2{background:#FCEFD9;color:#95611A;}
+  .retry-btn{
+    background:var(--safety-soft);color:var(--safety);border:none;
+    font-weight:700;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;margin-top:8px;
+  }
+  .settings-field{margin-bottom:14px;}
+  .settings-field .lbl{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+/* ============ CONFIG / DATA MODEL ============
+Esta app funciona como archivo independiente (se abre con doble clic o desde Teams),
+por lo que NO usa el almacenamiento de artefactos de Claude. En su lugar:
+ - Cada registro se envía por HTTP a un flujo de Power Automate, que lo guarda como
+   fila en un Excel maestro dentro de la carpeta de Teams del equipo.
+ - Además, se guarda una copia local en este dispositivo (localStorage) para poder
+   ver el historial reciente y reintentar envíos si falla la conexión.
+*/
+const CONFIG_KEY = 'pmp_config_v1';
+const RECORDS_KEY = 'pmp_records_v1';
+
+// Si tu planta ya tiene la URL del flujo de Power Automate, puedes pegarla aquí
+// directamente antes de repartir el archivo a los técnicos, para que no tengan
+// que configurarla ellos mismos en cada celular.
+const DEFAULT_WEBHOOK_URL = 'https://default42cc3295cd0e449cb98e5ce5b560c1.d3.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0aeb724d22ec42cf94166f6b6d051721/triggers/manual/paths/invoke?api-version=1';
+
+function loadConfig(){
+  try{
+    const raw = localStorage.getItem(CONFIG_KEY);
+    return raw ? JSON.parse(raw) : {webhookUrl: DEFAULT_WEBHOOK_URL};
+  }catch(e){ return {webhookUrl: DEFAULT_WEBHOOK_URL}; }
+}
+function saveConfigObj(cfg){
+  try{ localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }catch(e){ console.error(e); }
+}
+function loadLocalRecords(){
+  try{
+    const raw = localStorage.getItem(RECORDS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+function saveLocalRecords(list){
+  try{ localStorage.setItem(RECORDS_KEY, JSON.stringify(list)); }catch(e){ console.error(e); }
+}
+
+
+const CONDICIONES = [
+  {key:'permiso', txt:'¿Requiere permiso especial?'},
+  {key:'conocimiento', txt:'¿Requiere conocimiento especial?'},
+  {key:'herramienta', txt:'¿Requiere el uso de herramienta especial?'},
+  {key:'repuesto', txt:'¿Requiere cambio de repuesto?'},
+];
+const CHECKLIST = [
+  {key:'materiales', txt:'No hay presencia de materiales extraños'},
+  {key:'guardas', txt:'Todas las guardas están en su lugar y ajustadas'},
+  {key:'residuos', txt:'Equipos sin residuos generados por la intervención'},
+  {key:'loto', txt:'Se retiró sistema LOTO y señalización'},
+];
+
+let state = {};
+let currentStep = 1;
+const TOTAL_STEPS = 7;
+let signaturePads = {}; // id -> {canvas, ctx, hasDrawn}
+let currentTab = 'nuevo';
+let searchTerm = '';
+
+function blankState(){
+  return {
+    fecha: new Date().toISOString().slice(0,10),
+    equipo:'', linea:'', aviso:'', horaInicio:'', horaFin:'',
+    descripcion:'', componente:'', parteComponente:'', diferencia:'',
+    tipoAveria:'', accionTomada:'', resumenTecnico:'',
+    condiciones:{permiso:'', conocimiento:'', herramienta:'', repuesto:''},
+    checklist:{materiales:'', guardas:'', residuos:'', loto:''},
+    aseo:'', observaciones:'',
+    nombreTecnico:'', nombreOperario:'',
+    extraInocuidad:false, extraSeguridad:false,
+    nombreInocuidad:'', nombreSeguridad:'',
+  };
+}
+
+function init(){
+  state = blankState();
+  currentStep = 1;
+  render();
+}
+
+function fmtDuration(hi, hf){
+  if(!hi || !hf) return '—';
+  const [h1,m1] = hi.split(':').map(Number);
+  const [h2,m2] = hf.split(':').map(Number);
+  let mins = (h2*60+m2) - (h1*60+m1);
+  if(mins < 0) mins += 24*60;
+  const h = Math.floor(mins/60), m = mins%60;
+  return (h>0? h+'h ':'') + m + 'min';
+}
+
+/* ============ RENDER SHELL ============ */
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="tabbar">
+      <button class="${currentTab==='nuevo'?'active':''}" onclick="switchTab('nuevo')">+ Nuevo Registro</button>
+      <button class="${currentTab==='historial'?'active':''}" onclick="switchTab('historial')">Historial</button>
+    </div>
+    ${currentTab==='nuevo' ? renderNuevoShell() : ''}
+    ${currentTab==='historial' ? '<div id="hist-root"></div>' : ''}
+  `;
+  if(currentTab==='nuevo'){
+    renderStepBody();
+  } else {
+    renderHistorial();
+  }
+}
+
+function switchTab(tab){
+  currentTab = tab;
+  if(tab==='nuevo' && currentStep===1 && !document.getElementById('step-body')){
+    // fresh
+  }
+  render();
+}
+
+/* ============ WIZARD SHELL ============ */
+function renderNuevoShell(){
+  let dots = '';
+  for(let i=1;i<=TOTAL_STEPS;i++){
+    dots += `<div class="dot ${i<currentStep?'done':''} ${i===currentStep?'active':''}"></div>`;
+  }
+  return `
+    <header class="top" style="position:relative;">
+      <button class="gear-btn" onclick="openSettings()">⚙</button>
+      <div class="code">FR-COO-ST-001 · Paso ${currentStep} de ${TOTAL_STEPS}</div>
+      <h1>${stepHeaderTitle()}</h1>
+    </header>
+    <div class="steps-bar">${dots}</div>
+    <main id="step-body"></main>
+    <footer class="nav">
+      ${currentStep>1 ? `<button class="btn btn-ghost" onclick="goBack()">Atrás</button>` : ''}
+      ${currentStep<TOTAL_STEPS ? `<button class="btn btn-primary" onclick="goNext()">Siguiente</button>` : `<button class="btn btn-submit" onclick="submitRecord()">Guardar registro</button>`}
+    </footer>
+  `;
+}
+
+function stepHeaderTitle(){
+  const titles = ['','Registro Post-Mantenimiento','Datos del equipo','Diagnóstico de la avería','Intervención realizada','Condiciones de la avería','Checklist de liberación','Firmas de liberación'];
+  return titles[currentStep];
+}
+
+function renderStepBody(){
+  const body = document.getElementById('step-body');
+  if(!body) return;
+  body.innerHTML = STEP_RENDERERS[currentStep]();
+  if(currentStep===6){ /* nothing extra */ }
+  if(currentStep===7){ setupSignaturePads(); }
+}
+
+/* ============ STEP RENDERERS ============ */
+const STEP_RENDERERS = {
+  1: ()=>`
+    <div class="card">
+      <div class="step-eyebrow"><div class="step-num">1</div><div class="step-title">Equipo y aviso</div></div>
+      <div class="step-sub">Identifica el equipo y la ventana de tiempo de la intervención.</div>
+      <label class="field"><span class="lbl">Fecha</span><input type="date" value="${state.fecha}" oninput="state.fecha=this.value"></label>
+      <div class="row2">
+        <label class="field"><span class="lbl">Equipo</span><input type="text" placeholder="Ej: Envasadora 3" value="${state.equipo}" oninput="state.equipo=this.value"></label>
+        <label class="field"><span class="lbl">Línea</span><input type="text" placeholder="Ej: Línea 2" value="${state.linea}" oninput="state.linea=this.value"></label>
+      </div>
+      <label class="field"><span class="lbl">N.º de aviso</span><input type="text" placeholder="Ej: AV-00123" value="${state.aviso}" oninput="state.aviso=this.value"></label>
+      <div class="row2">
+        <label class="field"><span class="lbl">Hora inicio</span><input type="time" value="${state.horaInicio}" oninput="state.horaInicio=this.value; refreshDuration()"></label>
+        <label class="field"><span class="lbl">Hora fin</span><input type="time" value="${state.horaFin}" oninput="state.horaFin=this.value; refreshDuration()"></label>
+      </div>
+      <div class="banner" id="dur-banner">Tiempo de reparación: <b>${fmtDuration(state.horaInicio,state.horaFin)}</b></div>
+    </div>
+  `,
+  2: ()=>`
+    <div class="card">
+      <div class="step-eyebrow"><div class="step-num">2</div><div class="step-title">Descripción del problema</div></div>
+      <div class="step-sub">Describe la avería con el mayor detalle posible.</div>
+      <label class="field"><span class="lbl">Descripción del problema / ¿Cuál componente?</span><textarea oninput="state.descripcion=this.value">${state.descripcion}</textarea></label>
+      <label class="field"><span class="lbl">¿Qué parte del componente?</span><textarea oninput="state.parteComponente=this.value">${state.parteComponente}</textarea></label>
+      <label class="field"><span class="lbl">¿Cómo difiere de su estado normal?</span><textarea oninput="state.diferencia=this.value">${state.diferencia}</textarea></label>
+    </div>
+  `,
+  3: ()=>`
+    <div class="card">
+      <div class="step-eyebrow"><div class="step-num">3</div><div class="step-title">Intervención realizada</div></div>
+      <div class="step-sub">Selecciona la duración de la avería para registrar la intervención correcta.</div>
+      <div class="choice-group" style="margin-bottom:16px;">
+        <div class="choice ${state.tipoAveria==='<1h'?'sel-yes':''}" onclick="setTipoAveria('<1h')">Avería &lt; 1 hora</div>
+        <div class="choice ${state.tipoAveria==='>1h'?'sel-yes':''}" onclick="setTipoAveria('>1h')">Avería &gt; 1 hora</div>
+      </div>
+      ${state.tipoAveria==='<1h' ? `
+        <label class="field"><span class="lbl">Acción tomada</span><textarea oninput="state.accionTomada=this.value">${state.accionTomada}</textarea></label>
+      ` : ''}
+      ${state.tipoAveria==='>1h' ? `
+        <label class="field"><span class="lbl">Resumen del problema técnico</span><textarea oninput="state.resumenTecnico=this.value">${state.resumenTecnico}</textarea></label>
+      ` : ''}
+      ${!state.tipoAveria ? `<div class="banner warn">Selecciona la duración de la avería para continuar.</div>` : ''}
+    </div>
+  `,
+  4: ()=>`
+    <div class="card">
+      <div class="step-eyebrow"><div class="step-num">4</div><div class="step-title">Condiciones para la avería</div></div>
+      <div class="step-sub">Marca sí o no para cada condición.</div>
+      ${CONDICIONES.map(c=>`
+        <div class="cond-item">
+          <div class="txt">${c.txt}</div>
+          <div class="mini-choice">
+            <div class="choice ${state.condiciones[c.key]==='SI'?'sel-yes':''}" onclick="setCond('${c.key}','SI')">SI</div>
+            <div class="choice ${state.condiciones[c.key]==='NO'?'sel-no':''}" onclick="setCond('${c.key}','NO')">NO</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `,
+  5: ()=>`
+    <div class="card">
+      <div class="step-eyebrow"><div class="step-num">5</div><div class="step-title">Checklist liberación del equipo</div></div>
+      <div class="step-sub">C = Cumple · N = No cumple · NA = No aplica</div>
+      ${CHECKLIST.map(c=>`
+        <div class="check-item">
+          <div class="txt">${c.txt}</div>
+          <div class="mini-choice">
+            <div class="choice ${state.checklist[c.key]==='C'?'sel-yes':''}" onclick="setCheck('${c.key}','C')">C</div>
+            <div class="choice ${state.checklist[c.key]==='N'?'sel-no':''}" onclick="setCheck('${c.key}','N')">N</div>
+            <div class="choice ${state.checklist[c.key]==='NA'?'sel-na':''}" onclick="setCheck('${c.key}','NA')">NA</div>
+          </div>
+        </div>
+      `).join('')}
+      <div class="cond-item" style="margin-top:6px;">
+        <div class="txt">¿Se requiere aseo?</div>
+        <div class="mini-choice">
+          <div class="choice ${state.aseo==='SI'?'sel-yes':''}" onclick="setAseo('SI')">SI</div>
+          <div class="choice ${state.aseo==='NO'?'sel-no':''}" onclick="setAseo('NO')">NO</div>
+        </div>
+      </div>
+      <label class="field" style="margin-top:14px;"><span class="lbl">Observaciones</span><textarea oninput="state.observaciones=this.value">${state.observaciones}</textarea></label>
+      ${checklistHasNo() ? `<div class="banner warn">Hay puntos marcados como "No cumple". El operario solo debe recibir el equipo si todos los puntos revisados cumplen.</div>` : ''}
+    </div>
+  `,
+  6: ()=>`
+    <div class="card">
+      <div class="step-eyebrow"><div class="step-num">6</div><div class="step-title">Resumen antes de firmar</div></div>
+      <div class="step-sub">Verifica los datos antes de pasar a las firmas de liberación.</div>
+      ${summaryRows()}
+    </div>
+  `,
+  7: ()=>`
+    <div class="card">
+      <div class="step-eyebrow"><div class="step-num">7</div><div class="step-title">Firmas de liberación</div></div>
+      <div class="step-sub">El técnico y el operario deben firmar en pantalla para liberar el equipo.</div>
+
+      <label class="field"><span class="lbl">Nombre del técnico</span><input type="text" value="${state.nombreTecnico}" oninput="state.nombreTecnico=this.value"></label>
+      <div class="sig-wrap">
+        <canvas class="sig-pad" id="sig-tecnico"></canvas>
+        <div class="sig-actions">
+          <span class="sig-hint">Firma con el dedo o el stylus</span>
+          <button class="btn-text" onclick="clearSig('tecnico')">Borrar</button>
+        </div>
+      </div>
+
+      <div style="height:18px;"></div>
+      <label class="field"><span class="lbl">Nombre del operario</span><input type="text" value="${state.nombreOperario}" oninput="state.nombreOperario=this.value"></label>
+      <div class="sig-wrap">
+        <canvas class="sig-pad" id="sig-operario"></canvas>
+        <div class="sig-actions">
+          <span class="sig-hint">Firma con el dedo o el stylus</span>
+          <button class="btn-text" onclick="clearSig('operario')">Borrar</button>
+        </div>
+      </div>
+
+      <div style="height:20px;"></div>
+      <div class="optional-toggle">
+        <input type="checkbox" id="chk-inocuidad" ${state.extraInocuidad?'checked':''} onchange="toggleExtra('extraInocuidad', this.checked)">
+        <label for="chk-inocuidad" class="txt">Requiere firma de Inocuidad Alimentaria</label>
+      </div>
+      ${state.extraInocuidad? `
+        <label class="field"><span class="lbl">Nombre — Inocuidad Alimentaria</span><input type="text" value="${state.nombreInocuidad}" oninput="state.nombreInocuidad=this.value"></label>
+        <div class="sig-wrap"><canvas class="sig-pad" id="sig-inocuidad"></canvas>
+          <div class="sig-actions"><span class="sig-hint">Firma con el dedo o el stylus</span><button class="btn-text" onclick="clearSig('inocuidad')">Borrar</button></div>
+        </div><div style="height:10px;"></div>
+      ` : ''}
+
+      <div class="optional-toggle">
+        <input type="checkbox" id="chk-seguridad" ${state.extraSeguridad?'checked':''} onchange="toggleExtra('extraSeguridad', this.checked)">
+        <label for="chk-seguridad" class="txt">Requiere firma de Seguridad Industrial</label>
+      </div>
+      ${state.extraSeguridad? `
+        <label class="field"><span class="lbl">Nombre — Seguridad Industrial</span><input type="text" value="${state.nombreSeguridad}" oninput="state.nombreSeguridad=this.value"></label>
+        <div class="sig-wrap"><canvas class="sig-pad" id="sig-seguridad"></canvas>
+          <div class="sig-actions"><span class="sig-hint">Firma con el dedo o el stylus</span><button class="btn-text" onclick="clearSig('seguridad')">Borrar</button></div>
+        </div>
+      ` : ''}
+
+      <div class="banner" style="margin-top:16px;">Este registro quedará guardado en el historial compartido, visible para todo el equipo de mantenimiento.</div>
+    </div>
+  `,
+};
+
+function summaryRows(){
+  const rows = [
+    ['Fecha', state.fecha], ['Equipo', state.equipo||'—'], ['Línea', state.linea||'—'],
+    ['Aviso', state.aviso||'—'], ['Hora inicio', state.horaInicio||'—'], ['Hora fin', state.horaFin||'—'],
+    ['Duración', fmtDuration(state.horaInicio,state.horaFin)],
+    ['Tipo de avería', state.tipoAveria==='<1h'?'Menor a 1 hora':state.tipoAveria==='>1h'?'Mayor a 1 hora':'—'],
+    ['Requiere aseo', state.aseo||'—'],
+  ];
+  return rows.map(r=>`<div class="cond-item"><div class="txt">${r[0]}</div><div style="font-weight:700;font-size:13.5px;">${r[1]}</div></div>`).join('');
+}
+
+function checklistHasNo(){
+  return Object.values(state.checklist).some(v=>v==='N');
+}
+
+/* ============ STATE HELPERS ============ */
+function setTipoAveria(v){ state.tipoAveria = v; renderStepBody(); }
+function setCond(key,v){ state.condiciones[key] = v; renderStepBody(); }
+function setCheck(key,v){ state.checklist[key] = v; renderStepBody(); }
+function setAseo(v){ state.aseo = v; renderStepBody(); }
+function toggleExtra(key, val){ state[key] = val; renderStepBody(); if(currentStep===7){ setupSignaturePads(); } }
+function refreshDuration(){
+  const el = document.getElementById('dur-banner');
+  if(el) el.innerHTML = `Tiempo de reparación: <b>${fmtDuration(state.horaInicio,state.horaFin)}</b>`;
+}
+
+/* ============ NAVIGATION ============ */
+function validateStep(n){
+  if(n===1){
+    if(!state.equipo || !state.linea || !state.horaInicio || !state.horaFin){
+      toast('Completa equipo, línea y horas para continuar.'); return false;
+    }
+  }
+  if(n===3){
+    if(!state.tipoAveria){ toast('Selecciona la duración de la avería.'); return false; }
+    if(state.tipoAveria==='<1h' && !state.accionTomada.trim()){ toast('Describe la acción tomada.'); return false; }
+    if(state.tipoAveria==='>1h' && !state.resumenTecnico.trim()){ toast('Describe el resumen técnico.'); return false; }
+  }
+  return true;
+}
+function goNext(){
+  if(!validateStep(currentStep)) return;
+  if(currentStep < TOTAL_STEPS){ currentStep++; renderNav(); renderStepBody(); }
+}
+function goBack(){
+  if(currentStep > 1){ currentStep--; renderNav(); renderStepBody(); }
+}
+function renderNav(){
+  // re-render shell to update step dots/header/footer buttons
+  const scrollY = window.scrollY;
+  render();
+  window.scrollTo(0, 0);
+}
+
+/* ============ SIGNATURE PAD ============ */
+function setupSignaturePads(){
+  ['tecnico','operario','inocuidad','seguridad'].forEach(id=>{
+    const canvas = document.getElementById('sig-'+id);
+    if(!canvas) return;
+    initPad(canvas, id);
+  });
+}
+function initPad(canvas, id){
+  const ratio = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * ratio;
+  canvas.height = rect.height * ratio;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(ratio, ratio);
+  ctx.lineWidth = 2.4;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#142229';
+
+  let drawing = false;
+  let last = null;
+  signaturePads[id] = {canvas, ctx, hasDrawn: !!state['firma_'+id]};
+
+  // restore previous drawing if exists
+  if(state['firma_'+id]){
+    const img = new Image();
+    img.onload = ()=>{ ctx.drawImage(img, 0, 0, rect.width, rect.height); };
+    img.src = state['firma_'+id];
+  }
+
+  function pos(e){
+    const r = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {x: clientX - r.left, y: clientY - r.top};
+  }
+  function start(e){ e.preventDefault(); drawing = true; last = pos(e); }
+  function move(e){
+    if(!drawing) return;
+    e.preventDefault();
+    const p = pos(e);
+    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+    last = p;
+    signaturePads[id].hasDrawn = true;
+    state['firma_'+id] = canvas.toDataURL('image/png');
+    updateSigStatus(id);
+  }
+  function end(){ drawing = false; }
+
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+
+  updateSigStatus(id);
+}
+function clearSig(id){
+  const pad = signaturePads[id];
+  if(!pad) return;
+  const rect = pad.canvas.getBoundingClientRect();
+  pad.ctx.clearRect(0,0,rect.width, rect.height);
+  pad.hasDrawn = false;
+  state['firma_'+id] = '';
+  updateSigStatus(id);
+}
+function updateSigStatus(id){
+  // no visual badge element currently placed; kept for future extension
+}
+
+/* ============ SETTINGS MODAL ============ */
+function openSettings(){
+  const cfg = loadConfig();
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'settings-overlay';
+  overlay.onclick = (e)=>{ if(e.target===overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div class="modal">
+      <button class="close-x" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <h2>Configuración de envío</h2>
+      <div class="banner">Pega aquí la URL del flujo de Power Automate (disparador "Cuando se recibe una solicitud HTTP"). Cada registro se enviará a esa URL para guardarse en el Excel de Teams.</div>
+      <div class="settings-field">
+        <span class="lbl">URL del webhook de Power Automate</span>
+        <input type="text" id="webhook-input" placeholder="https://prod-00.westus.logic.azure.com/..." value="${cfg.webhookUrl||''}">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:6px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="testConnection()">Probar conexión</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="saveSettings()">Guardar</button>
+      </div>
+      <div id="settings-msg" style="margin-top:12px;font-size:12.5px;color:var(--ink-soft);"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+function saveSettings(){
+  const url = document.getElementById('webhook-input').value.trim();
+  saveConfigObj({webhookUrl:url});
+  toast(url? 'Configuración guardada ✓' : 'Se guardó sin URL: los envíos quedarán pendientes.');
+  const overlay = document.getElementById('settings-overlay');
+  if(overlay) overlay.remove();
+  if(currentTab==='historial') drawHistorial(); else render();
+}
+async function testConnection(){
+  const url = document.getElementById('webhook-input').value.trim();
+  const msg = document.getElementById('settings-msg');
+  if(!url){ msg.textContent = 'Escribe primero la URL del webhook.'; return; }
+  msg.textContent = 'Probando conexión…';
+  try{
+    const res = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({id:'test', equipo:'PRUEBA DE CONEXIÓN', nombreTecnico:'Test', nombreOperario:'Test'}),
+    });
+    msg.textContent = res.ok ? '✓ Conexión exitosa. Revisa el Excel de Teams para ver la fila de prueba.' : `El flujo respondió con estado ${res.status}. Revisa el flujo en Power Automate.`;
+  }catch(err){
+    msg.textContent = 'No se pudo conectar. Verifica la URL o tu conexión a internet.';
+  }
+}
+
+/* ============ TOAST ============ */
+function toast(msg){
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2400);
+}
+
+/* ============ SUBMIT ============ */
+async function submitRecord(){
+  if(!state.nombreTecnico.trim() || !state['firma_tecnico']){
+    toast('Falta el nombre y la firma del técnico.'); return;
+  }
+  if(!state.nombreOperario.trim() || !state['firma_operario']){
+    toast('Falta el nombre y la firma del operario.'); return;
+  }
+  if(state.extraInocuidad && (!state.nombreInocuidad.trim() || !state['firma_inocuidad'])){
+    toast('Falta la firma de Inocuidad Alimentaria.'); return;
+  }
+  if(state.extraSeguridad && (!state.nombreSeguridad.trim() || !state['firma_seguridad'])){
+    toast('Falta la firma de Seguridad Industrial.'); return;
+  }
+
+  const id = Date.now() + '-' + Math.random().toString(36).slice(2,8);
+  const record = {
+    id,
+    createdAt: new Date().toISOString(),
+    fecha: state.fecha, equipo: state.equipo, linea: state.linea, aviso: state.aviso,
+    horaInicio: state.horaInicio, horaFin: state.horaFin, duracion: fmtDuration(state.horaInicio, state.horaFin),
+    descripcion: state.descripcion, componente: state.componente, parteComponente: state.parteComponente, diferencia: state.diferencia,
+    tipoAveria: state.tipoAveria, accionTomada: state.accionTomada, resumenTecnico: state.resumenTecnico,
+    condiciones: state.condiciones, checklist: state.checklist, aseo: state.aseo, observaciones: state.observaciones,
+    nombreTecnico: state.nombreTecnico, firmaTecnico: state['firma_tecnico'],
+    nombreOperario: state.nombreOperario, firmaOperario: state['firma_operario'],
+    extraInocuidad: state.extraInocuidad, nombreInocuidad: state.nombreInocuidad, firmaInocuidad: state['firma_inocuidad']||'',
+    extraSeguridad: state.extraSeguridad, nombreSeguridad: state.nombreSeguridad, firmaSeguridad: state['firma_seguridad']||'',
+    envioEstado: 'pendiente',
+  };
+
+  // guarda copia local siempre, antes de intentar el envío
+  const local = loadLocalRecords();
+  local.unshift(record);
+  saveLocalRecords(local);
+
+  toast('Registro guardado en este dispositivo. Enviando…');
+  init();
+  currentTab = 'historial';
+  render();
+
+  await trySendRecord(record.id);
+}
+
+function buildWebhookPayload(r){
+  return {
+    id: r.id, fecha: r.fecha, equipo: r.equipo, linea: r.linea, aviso: r.aviso,
+    horaInicio: r.horaInicio, horaFin: r.horaFin, duracion: r.duracion,
+    descripcion: r.descripcion, parteComponente: r.parteComponente, diferencia: r.diferencia,
+    tipoAveria: r.tipoAveria, accionTomada: r.accionTomada, resumenTecnico: r.resumenTecnico,
+    condPermiso: r.condiciones.permiso, condConocimiento: r.condiciones.conocimiento,
+    condHerramienta: r.condiciones.herramienta, condRepuesto: r.condiciones.repuesto,
+    checkMateriales: r.checklist.materiales, checkGuardas: r.checklist.guardas,
+    checkResiduos: r.checklist.residuos, checkLoto: r.checklist.loto,
+    aseo: r.aseo, observaciones: r.observaciones,
+    nombreTecnico: r.nombreTecnico, firmaTecnicoBase64: r.firmaTecnico,
+    nombreOperario: r.nombreOperario, firmaOperarioBase64: r.firmaOperario,
+    extraInocuidad: r.extraInocuidad, nombreInocuidad: r.nombreInocuidad, firmaInocuidadBase64: r.firmaInocuidad||'',
+    extraSeguridad: r.extraSeguridad, nombreSeguridad: r.nombreSeguridad, firmaSeguridadBase64: r.firmaSeguridad||'',
+  };
+}
+
+async function trySendRecord(id){
+  const cfg = loadConfig();
+  const local = loadLocalRecords();
+  const idx = local.findIndex(r=>r.id===id);
+  if(idx===-1) return;
+  const record = local[idx];
+
+  if(!cfg.webhookUrl){
+    record.envioEstado = 'sin-config';
+    saveLocalRecords(local);
+    if(currentTab==='historial') drawHistorial();
+    return;
+  }
+
+  try{
+    const res = await fetch(cfg.webhookUrl, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(buildWebhookPayload(record)),
+    });
+    if(res.ok){
+      record.envioEstado = 'enviado';
+      toast('Registro enviado al Excel de Teams ✓');
+    } else {
+      record.envioEstado = 'pendiente';
+      toast('El servidor respondió con error. Quedó pendiente para reintentar.');
+    }
+  }catch(err){
+    console.error(err);
+    record.envioEstado = 'pendiente';
+    toast('Sin conexión. El registro quedó pendiente de envío.');
+  }
+  saveLocalRecords(local);
+  if(currentTab==='historial') drawHistorial();
+}
+
+async function retryRecord(id){
+  toast('Reintentando envío…');
+  await trySendRecord(id);
+}
+
+async function retryAllPending(){
+  const local = loadLocalRecords();
+  const pending = local.filter(r=>r.envioEstado==='pendiente'||r.envioEstado==='sin-config');
+  if(pending.length===0){ toast('No hay registros pendientes.'); return; }
+  toast(`Reintentando ${pending.length} registro(s)…`);
+  for(const r of pending){ await trySendRecord(r.id); }
+}
+
+
+/* ============ HISTORIAL ============ */
+let allRecords = [];
+function loadAllRecords(){
+  allRecords = loadLocalRecords();
+}
+
+
+async function renderHistorial(){
+  const root = document.getElementById('hist-root');
+  root.innerHTML = `
+    <header class="top" style="position:relative;"><button class="gear-btn" onclick="openSettings()">⚙</button><div class="code">FR-COO-ST-001</div><h1>Historial de averías</h1><div id="conn-pill-slot"></div></header>
+    <main><div style="text-align:center;padding:40px;color:var(--ink-soft);">Cargando registros…</div></main>
+  `;
+  await loadAllRecords();
+  drawHistorial();
+}
+
+function drawHistorial(){
+  const root = document.getElementById('hist-root');
+  const filtered = allRecords.filter(r=>{
+    if(!searchTerm) return true;
+    const s = searchTerm.toLowerCase();
+    return (r.equipo||'').toLowerCase().includes(s) || (r.linea||'').toLowerCase().includes(s) || (r.aviso||'').toLowerCase().includes(s);
+  });
+
+  const total = allRecords.length;
+  const menores = allRecords.filter(r=>r.tipoAveria==='<1h').length;
+  const mayores = allRecords.filter(r=>r.tipoAveria==='>1h').length;
+  const pendientes = allRecords.filter(r=>r.envioEstado==='pendiente'||r.envioEstado==='sin-config').length;
+  const cfg = loadConfig();
+
+  root.innerHTML = `
+    <header class="top" style="position:relative;">
+      <button class="gear-btn" onclick="openSettings()">⚙</button>
+      <div class="code">FR-COO-ST-001</div><h1>Historial de averías</h1>
+      <span class="conn-pill ${cfg.webhookUrl?'ok':'off'}">${cfg.webhookUrl? '● Conectado a Power Automate' : '● Sin configurar envío'}</span>
+    </header>
+    <main>
+      <div class="banner">Este historial es la <b>copia local de este dispositivo</b>. El registro maestro y consolidado vive en el Excel de Teams al que apunta Power Automate.</div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">${total}</div><div class="lbl">Registros</div></div>
+        <div class="stat"><div class="num">${menores}</div><div class="lbl">&lt; 1 hora</div></div>
+        <div class="stat"><div class="num">${mayores}</div><div class="lbl">&gt; 1 hora</div></div>
+      </div>
+      ${pendientes>0 ? `<div class="banner warn">Tienes <b>${pendientes}</b> registro(s) sin enviar al Excel de Teams (sin conexión o sin configurar).
+        <button class="retry-btn" onclick="retryAllPending()">Reintentar todos</button></div>` : ''}
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar por equipo, línea o aviso" value="${searchTerm}" oninput="searchTerm=this.value; drawHistorial()">
+      </div>
+      <button class="export-btn" onclick="exportCSV()">⬇ Exportar copia local a CSV</button>
+      <div id="record-list">
+        ${filtered.length===0 ? emptyState() : filtered.map(recordCard).join('')}
+      </div>
+    </main>
+  `;
+}
+
+function emptyState(){
+  return `<div class="empty-state"><div class="icon">🗂️</div>Aún no hay registros guardados.<br>Crea el primero desde "+ Nuevo Registro".</div>`;
+}
+
+function recordCard(r){
+  const firmasOk = r.firmaTecnico && r.firmaOperario;
+  const envio = r.envioEstado || 'pendiente';
+  const envioBadge = envio==='enviado'
+    ? `<span class="badge ok">Enviado a Teams</span>`
+    : envio==='sin-config'
+      ? `<span class="badge pending2">Falta configurar envío</span>`
+      : `<span class="badge pend">Pendiente de envío</span>`;
+  return `
+    <div class="record-card">
+      <div onclick="showDetail('${r.id}')">
+        <div class="top-row">
+          <div>
+            <div class="eq">${escapeHtml(r.equipo)||'Equipo sin nombre'} · ${escapeHtml(r.linea)||'—'}</div>
+            <div class="meta">${r.fecha} · Aviso ${escapeHtml(r.aviso)||'—'} · ${r.duracion}</div>
+          </div>
+          <span class="badge ${firmasOk?'ok':'pend'}">${firmasOk?'Firmado':'Incompleto'}</span>
+        </div>
+        <div class="prob">${escapeHtml((r.descripcion||'').slice(0,110)) || 'Sin descripción registrada'}${(r.descripcion||'').length>110?'…':''}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+        ${envioBadge}
+        ${envio!=='enviado' ? `<button class="retry-btn" onclick="event.stopPropagation(); retryRecord('${r.id}')">Reintentar envío</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function showDetail(id){
+  const r = allRecords.find(x=>x.id===id);
+  if(!r) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.onclick = (e)=>{ if(e.target===overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div class="modal">
+      <button class="close-x" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <h2>${escapeHtml(r.equipo)} · ${escapeHtml(r.linea)}</h2>
+      <div class="kv"><div class="k">Fecha</div><div class="v">${r.fecha}</div></div>
+      <div class="kv"><div class="k">Aviso</div><div class="v">${escapeHtml(r.aviso)||'—'}</div></div>
+      <div class="kv"><div class="k">Hora inicio / fin</div><div class="v">${r.horaInicio||'—'} - ${r.horaFin||'—'}</div></div>
+      <div class="kv"><div class="k">Duración</div><div class="v">${r.duracion}</div></div>
+      <div class="kv"><div class="k">Tipo de avería</div><div class="v">${r.tipoAveria==='<1h'?'Menor a 1 hora':r.tipoAveria==='>1h'?'Mayor a 1 hora':'—'}</div></div>
+
+      <div class="section-title">Diagnóstico</div>
+      <div class="kv"><div class="k">Descripción</div><div class="v" style="text-align:left;max-width:65%;">${escapeHtml(r.descripcion)||'—'}</div></div>
+      <div class="kv"><div class="k">Parte del componente</div><div class="v" style="text-align:left;max-width:65%;">${escapeHtml(r.parteComponente)||'—'}</div></div>
+      <div class="kv"><div class="k">Diferencia estado normal</div><div class="v" style="text-align:left;max-width:65%;">${escapeHtml(r.diferencia)||'—'}</div></div>
+
+      <div class="section-title">Intervención</div>
+      <div class="kv"><div class="k">${r.tipoAveria==='<1h'?'Acción tomada':'Resumen técnico'}</div><div class="v" style="text-align:left;max-width:65%;">${escapeHtml(r.accionTomada||r.resumenTecnico)||'—'}</div></div>
+
+      <div class="section-title">Checklist de liberación</div>
+      ${CHECKLIST.map(c=>`<div class="kv"><div class="k">${c.txt}</div><div class="v">${r.checklist[c.key]||'—'}</div></div>`).join('')}
+      <div class="kv"><div class="k">¿Requiere aseo?</div><div class="v">${r.aseo||'—'}</div></div>
+      <div class="kv"><div class="k">Observaciones</div><div class="v" style="text-align:left;max-width:65%;">${escapeHtml(r.observaciones)||'—'}</div></div>
+
+      <div class="section-title">Firmas de liberación</div>
+      <div class="kv"><div class="k">Técnico</div><div class="v">${escapeHtml(r.nombreTecnico)}</div></div>
+      ${r.firmaTecnico? `<img class="sig-img" src="${r.firmaTecnico}">`:''}
+      <div class="kv" style="margin-top:10px;"><div class="k">Operario</div><div class="v">${escapeHtml(r.nombreOperario)}</div></div>
+      ${r.firmaOperario? `<img class="sig-img" src="${r.firmaOperario}">`:''}
+      ${r.extraInocuidad? `<div class="kv" style="margin-top:10px;"><div class="k">Inocuidad Alimentaria</div><div class="v">${escapeHtml(r.nombreInocuidad)}</div></div>${r.firmaInocuidad?`<img class="sig-img" src="${r.firmaInocuidad}">`:''}` : ''}
+      ${r.extraSeguridad? `<div class="kv" style="margin-top:10px;"><div class="k">Seguridad Industrial</div><div class="v">${escapeHtml(r.nombreSeguridad)}</div></div>${r.firmaSeguridad?`<img class="sig-img" src="${r.firmaSeguridad}">`:''}` : ''}
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function exportCSV(){
+  if(allRecords.length===0){ toast('No hay registros para exportar.'); return; }
+  const headers = ['Fecha','Equipo','Línea','Aviso','Hora inicio','Hora fin','Duración','Tipo avería','Descripción','Parte componente','Diferencia estado normal','Acción/Resumen','Permiso especial','Conocimiento especial','Herramienta especial','Cambio repuesto','Materiales extraños','Guardas','Residuos','LOTO','Requiere aseo','Observaciones','Técnico','Firma técnico (sí/no)','Operario','Firma operario (sí/no)'];
+  const rows = allRecords.map(r=>[
+    r.fecha, r.equipo, r.linea, r.aviso, r.horaInicio, r.horaFin, r.duracion,
+    r.tipoAveria==='<1h'?'Menor a 1 hora':r.tipoAveria==='>1h'?'Mayor a 1 hora':'',
+    r.descripcion, r.parteComponente, r.diferencia, (r.accionTomada||r.resumenTecnico),
+    r.condiciones.permiso, r.condiciones.conocimiento, r.condiciones.herramienta, r.condiciones.repuesto,
+    r.checklist.materiales, r.checklist.guardas, r.checklist.residuos, r.checklist.loto,
+    r.aseo, r.observaciones, r.nombreTecnico, r.firmaTecnico?'Sí':'No', r.nombreOperario, r.firmaOperario?'Sí':'No'
+  ]);
+  const csv = [headers, ...rows].map(row =>
+    row.map(cell => `"${String(cell??'').replace(/"/g,'""')}"`).join(',')
+  ).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `registro_averias_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// expose for inline onchange handlers
+window.drawHistorial = drawHistorial;
+window.showDetail = showDetail;
+window.exportCSV = exportCSV;
+window.switchTab = switchTab;
+window.goNext = goNext;
+window.goBack = goBack;
+window.submitRecord = submitRecord;
+window.setTipoAveria = setTipoAveria;
+window.setCond = setCond;
+window.setCheck = setCheck;
+window.setAseo = setAseo;
+window.toggleExtra = toggleExtra;
+window.refreshDuration = refreshDuration;
+window.clearSig = clearSig;
+window.openSettings = openSettings;
+window.saveSettings = saveSettings;
+window.testConnection = testConnection;
+window.retryRecord = retryRecord;
+window.retryAllPending = retryAllPending;
+
+init();
+</script>
+</body>
+</html>
